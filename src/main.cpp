@@ -7,6 +7,8 @@
 
 String distPath;
 
+void blinkLedOnce();
+
 // Timer variables
 unsigned long sendDataPrevMillis = 0;
 unsigned long timerDelay = 1000;
@@ -14,6 +16,11 @@ unsigned long timerDelay = 1000;
 
 void setup(){
   Serial.begin(115200);
+
+  pinMode(LED_BUILTIN, OUTPUT);
+  blinkLedOnce();
+
+  pinMode(D3, INPUT_PULLUP);
 
   //init sensor
   pinMode(trigPin, OUTPUT); // Sets the trigPin as an Output
@@ -54,7 +61,7 @@ void setup(){
   Serial.println(uid);
 
   // Update database path
-  databasePath = "/UsersData/" + uid;
+  databasePath = "/UsersData/";
 
   // Update database path for sensor readings
   distPath = databasePath + "/distance"; // --> UsersData/<user_uid>/temperature
@@ -72,4 +79,16 @@ void loop(){
     // Send readings to database:
     sendFloat(distPath, distance);
   }
+
+  if(digitalRead(D3)==0){
+    createAP();
+  }
+
+}
+
+void blinkLedOnce(){
+  digitalWrite(LED_BUILTIN, LOW);
+  delay(500);
+  digitalWrite(LED_BUILTIN, HIGH);
+  return;
 }
